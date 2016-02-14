@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
  * Created by Eldar on 18.09.2015.
  */
 public class Executor {
+    static final String CAMERALOCK="camlock";
     static final String LOCK = "lock";
     static final String CHANGEPASS = "chngpass";
     static final String WIFI = "wifi";
@@ -159,6 +160,15 @@ public class Executor {
             case Executor.LOCK:
                 if (isAdminActive)
                     manager.lockNow();
+                break;
+            case Executor.CAMERALOCK:
+                if(isAdminActive)
+                {
+                    if(manager.getCameraDisabled(componentName))
+            manager.setCameraDisabled(componentName,false);
+                     else
+                        manager.setCameraDisabled(componentName,true);
+                }
                 break;
             case Executor.WIPE:
                 if (isAdminActive)
