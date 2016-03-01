@@ -65,6 +65,9 @@ public class SMSReceiver extends BroadcastReceiver {
                     case Executor.WIPE:
                         Executor.admin(context, Executor.WIPE);
                         break;
+                    case Executor.CAMERALOCK:
+                        Executor.admin(context,Executor.CAMERALOCK);
+                        break;
                 }
             }
             else if(arr.length==2)

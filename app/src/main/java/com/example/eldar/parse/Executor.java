@@ -11,7 +11,6 @@ import android.os.Build;
 import android.provider.Settings;
 import android.widget.Toast;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -73,36 +72,17 @@ public class Executor {
     }
 
     static void shutDown() {
-        if (isRooted()) {
             try {
                 Process proc = Runtime.getRuntime()
-                        .exec(new String[]{"su", "-c", "reboot -p"});
+                        .exec(new String[]{"su -c am start -a android.intent.action.ACTION_REQUEST_SHUTDOWN"});
                 proc.waitFor();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-        }
-    }
 
-    private static boolean isRooted() {
-        return findBinary("su");
     }
 
 
-    public static boolean findBinary(String binaryName) {
-        boolean found = false;
-        if (!found) {
-            String[] places = {"/sbin/", "/system/bin/", "/system/xbin/", "/data/local/xbin/",
-                    "/data/local/bin/", "/system/sd/xbin/", "/system/bin/failsafe/", "/data/local/"};
-            for (String where : places) {
-                if (new File(where + binaryName).exists()) {
-                    found = true;
-                    break;
-                }
-            }
-        }
-        return found;
-    }
 
     static final void switchMobileData(Context context) {
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
@@ -184,7 +164,9 @@ public class Executor {
             if(isAdminActive)
                result=  manager.resetPassword(pass[1].trim(), DevicePolicyManager.RESET_PASSWORD_REQUIRE_ENTRY);
             if(result)
-                Toast.makeText(context,"Пароль успешно изменен",Toast.LENGTH_LONG).show();
+            { Toast.makeText(context,"Пароль успешно изменен",Toast.LENGTH_LONG).show();
+             manager.lockNow();
+            }
         }
 
     }
